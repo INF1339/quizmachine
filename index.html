@@ -1,52 +1,10 @@
 <html>
 <head>
-   <script type="text/javascript" src="testdata.js"></script>
-    <script>
-       const responseLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-       const feebackoptions = [0, 1, 1, 1, 1, 1, 1, 1, 1,]
-       function show(){
-           console.log("SHOWN")
-           console.log(q)
-           var item = q.questestinterop.assessment.section.item
-           document.getElementById('output1').innerHTML = item.presentation.material.mattext.text
-        
-            var numberOfAnswers = item.presentation.response_lid.render_choice.response_label.length
-            console.log(numberOfAnswers)
-            for (i=0; i<numberOfAnswers; i++) {
-                var answerHTML = makeButton ('response_'+i, responseLetters[i],'feedback(feebackoptions['+i+'])')
-                document.getElementById("answer"+(i)).innerHTML=answerHTML + item.presentation.response_lid.render_choice.response_label[i].material.mattext.text
-            }
-       }
-       function makeButton (id, text, action) {
-           return ('<button id="' + id + '" type="button" onClick="' + action + '">' + text + '</button>')
-       }
-       function feedback (fb) {
-           var msgs = ["That was well done indeed", "Oooops, maybe think again?"]
-           alert(msgs[fb])
-       }
-       document.addEventListener('DOMContentLoaded', show);
-    </script>
-
 </head>
 <body>
-    <div id="output1"></div>
-    <table>
-        <tr>
-            <td id="answer0"></td>
-            <td id="answer1"></td>
-            <td id="answer2"></td>
-            <td id="answer3"></td>
-            <td id="answer4"></td>
-            <td id="answer5"></td>
-            <td id="answer6"></td>
-        </tr>
-    </table>
-    <!--<div id="answer1"></div>
-    <div id="answer2"></div>
-    <div id="answer3"></div>
-    <div id="answer4"></div>
-    <div id="answer5"></div>
-    <div id="answer6"></div>
-    <div id="answer7"></div>-->
+   <a href="version0.html>Version 0</a><br />
+   <a href="version1.html>Version 1</a><br />
+   <a href="version2.html>Version 2</a><br />
+   <a href="version2.html>Version 3</a><br />
 </body>
 </html> 
