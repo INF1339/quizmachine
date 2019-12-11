@@ -1,0 +1,134 @@
+<html>
+<head>
+   <!--<script type="text/javascript" src="testdata.js"></script>-->
+   <script type="text/javascript" src="experimentalquiz.js"></script>
+    <script>
+        
+        /* NEXT
+           LOOK UP FEEDBACK IN JSON
+        */
+       const responseLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+       const feebackoptions = [0, 1, 1, 1, 1, 1, 1, 1, 1,]
+       
+       // Logic Flow
+       // LOAD ITEM 
+       var quizItem = {}
+       quizItem = q
+        const item = quizItem.questestinterop.assessment.section.item
+       
+       // DISPLAY QUESTION
+       // GET RESPONSE : button should call response processing with response
+       // either load up responses and feedback here or earlier
+       // GIVE FEEDBACK
+       // RECORD DATA
+       
+       function show(){
+       // generic presentation of a quiz item stored in json called "q"       
+           console.log("SHOWN")
+           console.log(quizItem)
+           
+           // point at the item
+           //var item = q.questestinterop.assessment.section.item
+           // display the question
+           document.getElementById('output1').innerHTML = item.presentation.material.mattext.text
+        
+           //display 1 to 7 answer options
+           var numberOfAnswers = item.presentation.response_lid.render_choice.response_label.length
+           console.log(numberOfAnswers)
+           for (i=0; i<numberOfAnswers; i++) {
+                var answerHTML = makeButton ('response_'+i, responseLetters[i],'feedback(feebackoptions['+i+'])')
+                document.getElementById("answer"+(i)).innerHTML=answerHTML + item.presentation.response_lid.render_choice.response_label[i].material.mattext.text
+            }
+           enumerateFeedback()
+           displayFeedback()
+           responseProcessing()
+       }
+        
+        function responseProcessing(){
+           const flowchart = q.questestinterop.assessment.section.item.resprocessing
+           const outcomes = flowchart.outcomes
+           const action = flowchart.respcondition //an array
+           
+           for (var i = 0; i<action.length; i++) {
+               
+               
+               if (Object.getOwnPropertyNames(action[i].conditionvar).length === 0)
+               {console.log('conditionvar empty')}
+               else {console.log('conditionvar is', action[i].conditionvar)}
+           }
+        }
+        
+        function enumerateFeedback(){
+           const x = q.questestinterop.assessment.section.item.itemfeedback
+           var fb = []
+           for (var i = 0; i < x.length; i++){
+               var a = x[i].ident
+               var b = x[i].flow_mat.material.mattext.text
+               fb.push({a,b})}
+           console.log(fb)
+       } 
+        
+       function displayFeedback () {
+           const x = q.questestinterop.assessment.section.item
+           const y = q.questestinterop.assessment.section.item.presentation.response_lid.render_choice.response_label
+           var itemFeedbackIdent = []
+           for (var j = 0; j < x.presentation.response_lid.render_choice.response_label.length; j++) {
+               itemFeedbackIdent[j] = x.presentation.response_lid.render_choice.response_label[j].ident + '_fb'
+           } 
+           console.log(itemFeedbackIdent)
+           
+           
+           
+          var feedbackText = ''
+           for (var i = 0; i < x.resprocessing.respcondition.length; i++) {
+               
+               feedbackText = feedbackText + '<h3>' 
+               if (itemFeedbackIdent.includes(x.resprocessing.respcondition[i].displayfeedback.linkrefid)) {
+                   feedbackText = feedbackText + 'YAHOO'
+               }           
+               feedbackText = feedbackText + x.resprocessing.respcondition[i].displayfeedback.linkrefid + '</h3>'
+               feedbackText = feedbackText + '<p>' + x.itemfeedback[i].flow_mat.material.mattext.text + '</p>'
+           }
+           
+           
+           document.getElementById('feedback').innerHTML = feedbackText
+       }
+        
+       function makeButton (id, text, action) {
+           return ('<button id="' + id + '" type="button" onClick="' + action + '">' + text + '</button>')
+       }
+       function feedback (fb) {
+           var msgs = ["That was well done indeed", "Oooops, maybe think again?"]
+           alert(msgs[fb])
+           //input should be response choice
+           //use input to look up right/wrong
+           //use right/wrong and input to formulate feedback
+           //display feedback
+       }
+       document.addEventListener('DOMContentLoaded', show);
+    </script>
+
+</head>
+<body>
+    <div id="output1"></div>
+    <table>
+        <tr>
+            <td id="answer0"></td>
+            <td id="answer1"></td>
+            <td id="answer2"></td>
+            <td id="answer3"></td>
+            <td id="answer4"></td>
+            <td id="answer5"></td>
+            <td id="answer6"></td>
+        </tr>
+    </table>
+    <div id="feedback"></div>
+    <!--<div id="answer1"></div>
+    <div id="answer2"></div>
+    <div id="answer3"></div>
+    <div id="answer4"></div>
+    <div id="answer5"></div>
+    <div id="answer6"></div>
+    <div id="answer7"></div>-->
+</body>
+</html> 
