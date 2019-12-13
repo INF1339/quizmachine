@@ -1,7 +1,8 @@
 <html>
 <head>
    <!--<script type="text/javascript" src="testdata.js"></script>-->
-   <script type="text/javascript" src="experimentalquiz.js"></script>
+   <!--<script type="text/javascript" src="experimentalquiz.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
     <script>
         
         /* NEXT
@@ -9,12 +10,31 @@
         */
        const responseLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
        const feebackoptions = [0, 1, 1, 1, 1, 1, 1, 1, 1,]
+       var q = {}
+       
+       
+       
+        function gotData(data){
+            console.log('data in gotData = ', data)
+            q = data
+            run(q)
+        }
+       
+      
+       
+       function setup() {
+           var URLvars = getUrlVars()
+           console.log('URLvars[\'test\' in setup()', URLvars['test'])
+           loadJSON('experimentalquiz3.json', gotData)
+           
+       }
        
        // Logic Flow
        // LOAD ITEM 
+       
        var quizItem = {}
        quizItem = q
-        const item = quizItem.questestinterop.assessment.section.item
+       //const item = quizItem.questestinterop.assessment.section.item
        
        // DISPLAY QUESTION
        // GET RESPONSE : button should call response processing with response
@@ -27,15 +47,18 @@
             var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
                 vars[key] = value;
             });
-            console.log(vars)
-            //return vars;
+            console.log('vars in getUrlVars:', vars)
+            return (vars);
         }
 
         
-       function run() {
-           getUrlVars()
-           displayQuestion()
-           displayAnswers()
+       function run(q) {
+           
+           //q = loadJSON('experimentalquiz3.json')
+           console.log('run:', q)
+           //getUrlVars()
+           //displayQuestion()
+           //displayAnswers()
        }
         
        function displayQuestion(){
@@ -182,7 +205,7 @@
            //use right/wrong and input to formulate feedback
            //display feedback
        }
-       document.addEventListener('DOMContentLoaded', run);
+      // document.addEventListener('DOMContentLoaded', run);
     </script>
 
 </head>
