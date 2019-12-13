@@ -44,9 +44,7 @@ var q = {
               "mattext": {
                 "texttype": "text/html",
                 "text": "<div><p>What is the name of the character who sings I love trash?</p>
-                <p>VIDEO HERE<iframe width='560' height='315' src='https://www.youtube.com/embed/mUXojQ_nhD4' 
-                frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
-                allowfullscreen></iframe></p></div>"
+                <p>VIDEO HERE</p></div>"
                }
             },
             "response_lid": {
