@@ -1,0 +1,200 @@
+<html>
+<head>
+   <!--<script type="text/javascript" src="testdata.js"></script>-->
+   <script type="text/javascript" src="experimentalquiz.js"></script>
+    <script>
+        
+        /* NEXT
+           LOOK UP FEEDBACK IN JSON
+        */
+       const responseLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+       const feebackoptions = [0, 1, 1, 1, 1, 1, 1, 1, 1,]
+       
+       // Logic Flow
+       // LOAD ITEM 
+       var quizItem = {}
+       quizItem = q
+        const item = quizItem.questestinterop.assessment.section.item
+       
+       // DISPLAY QUESTION
+       // GET RESPONSE : button should call response processing with response
+       // either load up responses and feedback here or earlier
+       // GIVE FEEDBACK
+       // RECORD DATA
+       
+       function run() {
+           displayQuestion()
+           displayAnswers()
+       }
+        
+       function displayQuestion(){
+           document.getElementById('questionDisplayDiv').innerHTML = item.presentation.material.mattext.text
+       }
+       
+       //display 1 to 7 answer options
+       function displayAnswers() {
+           var numberOfAnswers = item.presentation.response_lid.render_choice.response_label.length
+           for (i=0; i<numberOfAnswers; i++) {
+                var answerHTML = OLDmakeButton ('response_'+i, responseLetters[i],'feedback(feebackoptions['+i+'])')
+                document.getElementById("answer"+(i)).innerHTML=answerHTML + item.presentation.response_lid.render_choice.response_label[i].material.mattext.text
+            }
+           
+           var answers = loadAnswerObject()
+           const answerKeys = Object.keys(answers)
+           console.log ('answer keys are ', answerKeys)
+           for (var i=0; i<answerKeys.length; i++) {
+               var button = makeButton('response_'+i, responseLetters[i],'userSaid(\''+answerKeys[i]+'\')')
+               document.getElementById("answer"+(i)).innerHTML=button + answers[answerKeys[i]]
+           }
+           
+           
+           enumerateFeedback()
+           //loadAnswerArray()
+           displayFeedback()
+           responseProcessing()
+        }
+        function userSaid(x) {
+            console.log('USERSAID('+x+')')
+            var answers = loadAnswerObject()
+            console.log ('Answer was ',answers[x])
+            var feedback = loadFeedbackObject()
+            console.log ('Feedback is ', feedback[x+'_fb'])
+            document.getElementById('feedback').innerHTML = feedback[x+'_fb']
+        }
+        // create an object with answer identifiers as keys and answer text as value
+        // we can extract the keys as a array and use this to link user answers and
+        // feedback
+        function loadAnswerObject() {
+            //var answerArray = []
+            var obj = {}
+            var numberOfAnswers = item.presentation.response_lid.render_choice.response_label.length
+            for (var i=0; i<numberOfAnswers; i++) {
+                
+                const a = item.presentation.response_lid.render_choice.response_label[i].ident
+                const b = item.presentation.response_lid.render_choice.response_label[i].material.mattext.text
+                obj[a] = b
+                //answerArray.push(obj)
+            }
+            return(obj)
+            }
+         //create an object with response identifiers as keys and response as values
+         //we can look it up by appending _fb to answer keys 
+         function loadFeedbackObject() {
+             var numberOfFeedbacks = item.itemfeedback.length
+             var obj = {}
+             for (var i=0; i<numberOfFeedbacks; i++) {
+                 const a = item.itemfeedback[i].ident
+                 const b = item.itemfeedback[i].flow_mat.material.mattext.text
+                 obj[a] = b
+                 }
+             return(obj)
+         }           
+        // responseProcessing converts JSON object into an if-then structure
+        // that specifies output based on what sorts of feedback is provided
+        function responseProcessing(userResponse){
+           var answers = loadAnswerObject()
+           console.log ('answer keys are ',Object.keys(answers))
+           var feedback = loadFeedbackObject()
+           console.log('answers = ', answers)
+           console.log('feedback = ', feedback)
+           for (var j=0; j<Object.keys(answers).length; j++) {
+               console.log(answers[Object.keys(answers)[j]], feedback[Object.keys(answers)[j]+'_fb'])
+           }
+            
+           // material below should be replace with a better thinking of it
+           // what we want to do is assemble our overall response to the user's
+           // answer - points, general feedback, correct/incorrect feedback and item
+           // specific feedback. as of now the code below does not do this
+           const flowchart = q.questestinterop.assessment.section.item.resprocessing
+           const conditions = q.questestinterop.assessment.section.item.resprocessing.respcondition
+           const outcomes = flowchart.outcomes
+           const action = flowchart.respcondition //an array
+           
+           for (var i = 0; i<action.length; i++) {
+               
+               
+               if (Object.getOwnPropertyNames(action[i].conditionvar).length === 0)
+               {console.log('conditionvar empty')}
+               else {console.log('conditionvar is', action[i].conditionvar)}
+           }
+        }
+        
+        function enumerateFeedback(){
+           const x = q.questestinterop.assessment.section.item.itemfeedback
+           var fb = []
+           for (var i = 0; i < x.length; i++){
+               var a = x[i].ident
+               var b = x[i].flow_mat.material.mattext.text
+               fb.push({a,b})}
+           console.log(fb)
+       } 
+        
+       function displayFeedback () {
+           const x = q.questestinterop.assessment.section.item
+           const y = q.questestinterop.assessment.section.item.presentation.response_lid.render_choice.response_label
+           var itemFeedbackIdent = []
+           for (var j = 0; j < x.presentation.response_lid.render_choice.response_label.length; j++) {
+               itemFeedbackIdent[j] = x.presentation.response_lid.render_choice.response_label[j].ident + '_fb'
+           } 
+           console.log(itemFeedbackIdent)
+           
+           
+           
+          var feedbackText = ''
+           for (var i = 0; i < x.resprocessing.respcondition.length; i++) {
+               
+               feedbackText = feedbackText + '<h3>' 
+               if (itemFeedbackIdent.includes(x.resprocessing.respcondition[i].displayfeedback.linkrefid)) {
+                   feedbackText = feedbackText + 'YAHOO'
+               }           
+               feedbackText = feedbackText + x.resprocessing.respcondition[i].displayfeedback.linkrefid + '</h3>'
+               feedbackText = feedbackText + '<p>' + x.itemfeedback[i].flow_mat.material.mattext.text + '</p>'
+           }
+           
+           
+           document.getElementById('feedback').innerHTML = feedbackText
+       }
+       
+       // new version of this should make a button that calls a function "userSaid(IDENT) where IDENT
+       // is our internal answer code
+       function OLDmakeButton (id, text, action) {
+           return ('<button id="' + id + '" type="button" onClick="' + action + '">' + text + '</button>')
+       }
+       function makeButton (buttonid, label, action) {
+           return ('<button id="' + buttonid + '" type="button" onClick="' + action + '">' + label + '</button>')
+       }
+       function feedback (fb) {
+           var msgs = ["That was well done indeed", "Oooops, maybe think again?"]
+           alert(msgs[fb])
+           //input should be response choice
+           //use input to look up right/wrong
+           //use right/wrong and input to formulate feedback
+           //display feedback
+       }
+       document.addEventListener('DOMContentLoaded', run);
+    </script>
+
+</head>
+<body>
+    <div id="questionDisplayDiv"></div>
+    <table>
+        <tr>
+            <td id="answer0"></td>
+            <td id="answer1"></td>
+            <td id="answer2"></td>
+            <td id="answer3"></td>
+            <td id="answer4"></td>
+            <td id="answer5"></td>
+            <td id="answer6"></td>
+        </tr>
+    </table>
+    <div id="feedback"></div>
+    <!--<div id="answer1"></div>
+    <div id="answer2"></div>
+    <div id="answer3"></div>
+    <div id="answer4"></div>
+    <div id="answer5"></div>
+    <div id="answer6"></div>
+    <div id="answer7"></div>-->
+</body>
+</html> 
