@@ -42,18 +42,28 @@
                 
                 
                 for (var i = 0; i<conditions.length; i++) {
-                    
+                    var newFB = ''
                     if (Object.getOwnPropertyNames(conditions[i].conditionvar).length === 0)
                       {//console.log('conditionvar empty')
                        console.log(fb_obj[conditions[i].displayfeedback.linkrefid])
-                       fbText = fbText + fb_obj[conditions[i].displayfeedback.linkrefid] + '<br />'
+                          //NOTE: next line should test .texttype and only include break if not html
+                          // .texttype == 'text/html' BUT currently loadFBObj does not collect this
+                          // property. Might need contents of array to be object
+                       newFB = fb_obj[conditions[i].displayfeedback.linkrefid].text
+                       if (fb_obj[conditions[i].displayfeedback.linkrefid].texttype !== 'text/html')
+                           {newFB = '<p>' + newFB + '</p>'}
+                       fbText = fbText + newFB
                       }
                     else 
                       {
                         console.log('conditionvar['+i+'] is', conditions[i].conditionvar)
                         if (conditions[i].conditionvar.varequal.text == userSaid){
                             console.log(fb_obj[conditions[i].displayfeedback.linkrefid])
-                            fbText = fbText + fb_obj[conditions[i].displayfeedback.linkrefid] + '<br />'
+                            //fbText = fbText + fb_obj[conditions[i].displayfeedback.linkrefid] + '<br />'
+                            newFB = fb_obj[conditions[i].displayfeedback.linkrefid].text
+                            if (fb_obj[conditions[i].displayfeedback.linkrefid].texttype !== 'text/html')
+                               {newFB = '<p>' + newFB + '</p>'}
+                            fbText = fbText + newFB 
                             if (conditions[i].continue == 'No') {break;}
                            }
                         
@@ -82,7 +92,8 @@
              var obj = {}
              for (var i=0; i<numberOfFeedbacks; i++) {
                  const a = feedback[i].ident
-                 const b = feedback[i].flow_mat.material.mattext.text
+                 // MAYBE b should be mattext so it carries both text and texttype back
+                 const b = feedback[i].flow_mat.material.mattext //.text
                  obj[a] = b
                  }
              return(obj)
