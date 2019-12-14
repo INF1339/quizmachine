@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+        <script>
+            var feedback = []
+            var responseprocessing ={}
+            function setup() {
+                var URLvars = getUrlVars()
+                console.log('URLvars[\'test\' in setup()', URLvars['questionid'])
+                if (URLvars.hasOwnProperty('questionid')) {
+                    loadJSON(URLvars['questionid']+'.json', present, loadJSONError)
+                }
+                else {
+                    loadJSON('sampleQuestion.json', present, loadJSONError)
+                }
+            }
+            
+            function present(data) {
+                
+                console.log('function present(data): ', data)
+                const q = data.questestinterop.assessment.section.item.presentation.material.mattext.text
+                const a = data.questestinterop.assessment.section.item.presentation.response_lid.render_choice.response_label
+                console.log('itemfeedback: ',data.questestinterop.assessment.section.item.itemfeedback)
+                feedback = data.questestinterop.assessment.section.item.itemfeedback
+                responseprocessing = data.questestinterop.assessment.section.item.resprocessing
+                displayQuestion(q)
+                displayAnswers(a)
+        
+            }
+            
+            function respond(userSaid) {
+                console.log(userSaid)
+                console.log(feedback[1])
+                var fbText = ''
+                const outcomes = responseprocessing.outcomes
+                const conditions = responseprocessing.respcondition
+                
+                const fb_obj = loadFBObj()
+                console.log('in function respond, fb_obj = ', fb_obj)
+                
+                console.log('OUR FEEDBACK IS: ', fb_obj[userSaid+'_fb'])
+                
+                
+                for (var i = 0; i<conditions.length; i++) {
+                    
+                    if (Object.getOwnPropertyNames(conditions[i].conditionvar).length === 0)
+                      {//console.log('conditionvar empty')
+                       console.log(fb_obj[conditions[i].displayfeedback.linkrefid])
+                       fbText = fbText + fb_obj[conditions[i].displayfeedback.linkrefid] + '<br />'
+                      }
+                    else 
+                      {
+                        console.log('conditionvar['+i+'] is', conditions[i].conditionvar)
+                        if (conditions[i].conditionvar.varequal.text == userSaid){
+                            console.log(fb_obj[conditions[i].displayfeedback.linkrefid])
+                            fbText = fbText + fb_obj[conditions[i].displayfeedback.linkrefid] + '<br />'
+                            if (conditions[i].continue == 'No') {break;}
+                           }
+                        
+                        
+                    }
+                    
+                }
+                document.getElementById('feedback').innerHTML = fbText
+                // DEAL WITH OUTCOMES
+                
+                //loop over responseprocessing
+                
+                // if conditions[i].conditionvar is empty then display fb_obj[conditions[i].displayfeedback.linkrefid]
+                
+                // if conditions[i].conditionvar not empty...
+                //    if there is a varequal then if conditions[i].conditionvar.varequal.text == userSaid
+                //       then display fb_obj[conditions[i].displayfeedback.linkrefid]
+                
+                //in each case we deal with score if answer is correct
+            }
+            
+            //AUXILLIARY FUNCTIONS
+            
+            function loadFBObj() {
+             var numberOfFeedbacks = feedback.length
+             var obj = {}
+             for (var i=0; i<numberOfFeedbacks; i++) {
+                 const a = feedback[i].ident
+                 const b = feedback[i].flow_mat.material.mattext.text
+                 obj[a] = b
+                 }
+             return(obj)
+         }           
+
+            
+            
+            
+            
+            function getUrlVars() {
+                var vars = {};
+                //window.location.href returns URL
+                var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                    vars[key] = value;
+                    }
+                );
+                if (Object.keys(vars).length == 0) {
+                    console.log('NO URL PARAMETERS')
+                }
+                console.log('vars in getUrlVars:', vars)
+                return (vars);
+            }
+            
+            function loadJSONError(){
+                document.getElementById('questionDisplayDiv').innerHTML = 
+                    '<h3> Failed to load JSON for question</h3>'
+            }
+            
+            function displayQuestion(qText) {
+                console.log('displayQuestion: q = ', qText)
+                document.getElementById('questionDisplayDiv').innerHTML = qText
+            }
+            
+            function displayAnswers(aArray) {
+                console.log('displayQuestion: a = ', aArray)
+                var numberOfAnswers = aArray.length
+                for (i=0; i<numberOfAnswers; i++) {
+                    document.getElementById('answer'+i).innerHTML = makeButton(i,aArray[i].ident, aArray[i].material.mattext.text)
+                }
+            }
+            
+            function makeButton(i, ident, text) {
+                return ('<button type=\'button\' onclick="respond('+'\''+ident+'\'' +')">' +'abcdefghi'[i]+'</button>'+text)
+            }
+            
+            function userSaid(responseIdentifier) {
+                console.log(responseIdentifier)
+                console.log(feedback[1])
+                
+            }
+
+        </script>
+    </head>
+    <body>
+        <h1>THIS IS VERSION 4</h1>
+        <p>Works when all feedback is present. Does not work when some are not.</p>
+        <hr>
+        <div id="questionDisplayDiv"></div>
+        <hr>
+        <div id="answer0"></div>
+        <div id="answer1"></div>
+        <div id="answer2"></div>
+        <div id="answer3"></div>
+        <div id="answer4"></div>
+        <div id="answer5"></div>
+        <div id="answer6"></div>
+        <hr>
+        <div id="feedback"></div>
+    </body>
+</html>
