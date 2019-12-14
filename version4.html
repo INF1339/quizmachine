@@ -59,7 +59,12 @@
                         console.log('conditionvar['+i+'] is', conditions[i].conditionvar)
                         if (conditions[i].conditionvar.varequal.text == userSaid){
                             console.log(fb_obj[conditions[i].displayfeedback.linkrefid])
-                            //fbText = fbText + fb_obj[conditions[i].displayfeedback.linkrefid] + '<br />'
+                            //Is there a SCORE action on this condition?
+                            if (conditions[i].hasOwnProperty('setvar')) {
+                                if (conditions[i].setvar.action == 'Set'){
+                                   document.getElementById(conditions[i].setvar.varname).innerHTML = conditions[i].setvar.text
+                                }
+                            }
                             newFB = fb_obj[conditions[i].displayfeedback.linkrefid].text
                             if (fb_obj[conditions[i].displayfeedback.linkrefid].texttype !== 'text/html')
                                {newFB = '<p>' + newFB + '</p>'}
@@ -153,6 +158,7 @@
         <hr>
         <div id="questionDisplayDiv"></div>
         <hr>
+        <table><tr><td>SCORE</td><td id="SCORE"></td></tr></table>
         <div id="answer0"></div>
         <div id="answer1"></div>
         <div id="answer2"></div>
