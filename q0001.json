@@ -129,11 +129,15 @@
                   "action": "Set",
                   "varname": "SCORE",
                   "text": "100"
+                },
+                "displayfeedback": {
+                  "feedbacktype": "Response",
+                  "linkrefid": "correct_fb"
                 }
               }
             ]
           },
-          "itemfeedback": {
+          "itemfeedback": [{
             "ident": "general_fb",
             "flow_mat": {
               "material": {
@@ -142,8 +146,9 @@
                   "text": "<p>1 through 9 are the input layer and 14 and 15 are the output layer.  Neurons 10, 11, 12, and 13 would be a hidden layer.</p>"
                 }
               }
-            },
-            "ident": "8568_fb",
+            }},
+            {
+            "ident": "correct_fb",
             "flow_mat": {
               "material": {
                 "mattext": {
@@ -152,7 +157,7 @@
                 }
               }
             }          
-          }
+          }]
         }
       }
     }

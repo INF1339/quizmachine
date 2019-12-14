@@ -2,6 +2,7 @@
     <head>
         <style>
             .trialstyle {font-family: 'courier'; font-size: 2.0em}
+            .horizontal {float:left;padding-right: 20px;}
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
         <script>
@@ -33,25 +34,22 @@
             
             function respond(userSaid) {
                 console.log(userSaid)
-                console.log(feedback[1])
+                //console.log(feedback[1])
                 var fbText = ''
                 const outcomes = responseprocessing.outcomes
                 const conditions = responseprocessing.respcondition
                 
                 const fb_obj = loadFBObj()
                 console.log('in function respond, fb_obj = ', fb_obj)
+                console.log('in function respond, conditions = ', conditions)
+                //console.log('OUR FEEDBACK IS: ', fb_obj[userSaid+'_fb'])
                 
-                console.log('OUR FEEDBACK IS: ', fb_obj[userSaid+'_fb'])
-                
-                
+                console.log('entering for loop with conditions.length =', conditions.length)
                 for (var i = 0; i<conditions.length; i++) {
                     var newFB = ''
                     if (Object.getOwnPropertyNames(conditions[i].conditionvar).length === 0)
                       {//console.log('conditionvar empty')
-                       console.log(fb_obj[conditions[i].displayfeedback.linkrefid])
-                          //NOTE: next line should test .texttype and only include break if not html
-                          // .texttype == 'text/html' BUT currently loadFBObj does not collect this
-                          // property. Might need contents of array to be object
+                       //console.log('conditionvar length 0: ', fb_obj[conditions[i].displayfeedback.linkrefid].text)
                        newFB = fb_obj[conditions[i].displayfeedback.linkrefid].text
                        if (fb_obj[conditions[i].displayfeedback.linkrefid].texttype !== 'text/html')
                            {newFB = '<p>' + newFB + '</p>'}
@@ -156,19 +154,22 @@
         </script>
     </head>
     <body>
-        <h1>THIS IS VERSION 4.1</h1>
-        <p>Works when all feedback is present. Does not work when some are not.</p>
+        <h1>THIS IS VERSION 4.4</h1>
+        <p>Feedback correctly displayed. Answers horizontal but don't wrap right yet. Score is posted but not tallied.  Can read JSON file name in URL parameters. Only one question item per call at this point.</p>
         <hr>
         <div id="questionDisplayDiv" class="trialstyle"></div>
         <hr>
         <table><tr><td>SCORE</td><td id="SCORE"></td></tr></table>
-        <div id="answer0"></div>
-        <div id="answer1"></div>
-        <div id="answer2"></div>
-        <div id="answer3"></div>
-        <div id="answer4"></div>
-        <div id="answer5"></div>
-        <div id="answer6"></div>
+        <div style="width: 100%">
+        <div id="answer0" class="horizontal"></div>
+        <div id="answer1" class="horizontal"></div>
+        <div id="answer2" class="horizontal"></div>
+        <div id="answer3" class="horizontal"></div>
+        <div id="answer4" class="horizontal"></div>
+        <div id="answer5" class="horizontal"></div>
+        <div id="answer6" class="horizontal"></div>
+        <div id="clearfloat" style="clear: left;"></div>
+        </div>
         <hr>
         <div id="feedback"></div>
     </body>
