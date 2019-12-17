@@ -6,7 +6,9 @@
     <script>
         
         /* NEXT
-           LOOK UP FEEDBACK IN JSON
+           clean up and toss extraneous stuff. we should be able to identify 
+           data file from URL parameter and grab feedback
+           current problem is no way to get parameters to the functions called by the buttons
         */
        const responseLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
        const feebackoptions = [0, 1, 1, 1, 1, 1, 1, 1, 1,]
@@ -25,7 +27,8 @@
        function setup() {
            var URLvars = getUrlVars()
            console.log('URLvars[\'test\' in setup()', URLvars['test'])
-           loadJSON('experimentalquiz3.json', gotData)
+           if (URLvars['test'] !== 'experimentalquiz3.json') {loadJson('experimentalquiz3.json', gotData)}
+           else {loadJSON(URLvars['test'], gotData)}
            
        }
        
@@ -53,27 +56,27 @@
 
         
        function run(q) {
-           
+           const item = q.questestinterop.assessment.section.item
            //q = loadJSON('experimentalquiz3.json')
            console.log('run:', q)
            //getUrlVars()
-           //displayQuestion()
-           //displayAnswers()
+           displayQuestion(item)
+           displayAnswers(item)
        }
         
-       function displayQuestion(){
+       function displayQuestion(item){
            document.getElementById('questionDisplayDiv').innerHTML = item.presentation.material.mattext.text
        }
        
        //display 1 to 7 answer options
-       function displayAnswers() {
+       function displayAnswers(item) {
            var numberOfAnswers = item.presentation.response_lid.render_choice.response_label.length
            for (i=0; i<numberOfAnswers; i++) {
                 var answerHTML = OLDmakeButton ('response_'+i, responseLetters[i],'feedback(feebackoptions['+i+'])')
                 document.getElementById("answer"+(i)).innerHTML=answerHTML + item.presentation.response_lid.render_choice.response_label[i].material.mattext.text
             }
            
-           var answers = loadAnswerObject()
+           var answers = loadAnswerObject(item)
            const answerKeys = Object.keys(answers)
            console.log ('answer keys are ', answerKeys)
            for (var i=0; i<answerKeys.length; i++) {
@@ -82,10 +85,10 @@
            }
            
            
-           enumerateFeedback()
+           enumerateFeedback(item)
            //loadAnswerArray()
-           displayFeedback()
-           responseProcessing()
+           displayFeedback(item)
+           responseProcessing(item)
         }
         function userSaid(x) {
             console.log('USERSAID('+x+')')
@@ -98,7 +101,7 @@
         // create an object with answer identifiers as keys and answer text as value
         // we can extract the keys as a array and use this to link user answers and
         // feedback
-        function loadAnswerObject() {
+        function loadAnswerObject(item) {
             //var answerArray = []
             var obj = {}
             var numberOfAnswers = item.presentation.response_lid.render_choice.response_label.length
@@ -113,7 +116,7 @@
             }
          //create an object with response identifiers as keys and response as values
          //we can look it up by appending _fb to answer keys 
-         function loadFeedbackObject() {
+         function loadFeedbackObject(item) {
              var numberOfFeedbacks = item.itemfeedback.length
              var obj = {}
              for (var i=0; i<numberOfFeedbacks; i++) {
@@ -153,8 +156,8 @@
            }
         }
         
-        function enumerateFeedback(){
-           const x = q.questestinterop.assessment.section.item.itemfeedback
+        function enumerateFeedback(item){
+           const x = item.itemfeedback
            var fb = []
            for (var i = 0; i < x.length; i++){
                var a = x[i].ident
@@ -163,9 +166,9 @@
            console.log(fb)
        } 
         
-       function displayFeedback () {
-           const x = q.questestinterop.assessment.section.item
-           const y = q.questestinterop.assessment.section.item.presentation.response_lid.render_choice.response_label
+       function displayFeedback (item) {
+           const x = item
+           const y = item.presentation.response_lid.render_choice.response_label
            var itemFeedbackIdent = []
            for (var j = 0; j < x.presentation.response_lid.render_choice.response_label.length; j++) {
                itemFeedbackIdent[j] = x.presentation.response_lid.render_choice.response_label[j].ident + '_fb'
@@ -210,7 +213,7 @@
 
 </head>
 <body>
-   <h1>VERSION 3: Read quiz/question selection in URL paramaters</h1>
+    <h3>Version 3: Read quiz/question selection in URL parameters</h3>
     <div id="questionDisplayDiv"></div>
     <table>
         <tr>
