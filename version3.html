@@ -27,7 +27,7 @@
        function setup() {
            var URLvars = getUrlVars()
            console.log('URLvars[\'test\' in setup()', URLvars['test'])
-           if (URLvars['test'] !== 'experimentalquiz3.json') {loadJson('experimentalquiz3.json', gotData)}
+           if (URLvars['test'] !== 'experimentalquiz3.json') {loadJSON('experimentalquiz3.json', gotData)}
            else {loadJSON(URLvars['test'], gotData)}
            
        }
