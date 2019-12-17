@@ -1,0 +1,364 @@
+<html>
+    <head>
+        <style>
+            .questionText {font-family: 'courier'; font-size: 2.0em; color: blue;}
+            .horizontal {float:left;padding-right: 20px;}
+            .answerText {color: red;}
+            .clearleft {clear: left;}
+            .log {color: saddlebrown; background-color: cornsilk;}
+            .feedbackText {color: green;}
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+        <script>
+            // read Canvas quiz XML that's been converted to JSON
+            // and present quiz in an embeddable format
+            // This version uses P5 library to exploit loadJSON. 
+            // Later, perhaps, we use P5 to make the graphics nice.
+            
+            // Declare global variable to hold input JSON
+            
+            var input = {}
+            
+            
+            var feedback = []
+            var responseprocessing ={}
+            
+            
+            function setup() {
+                var URLvars = getUrlVars()
+                logThis('URLvars[\'test\' in setup()', URLvars['quizid'])
+                if (URLvars.hasOwnProperty('quizid')) {
+                    loadJSON(URLvars['quizid']+'.json', present, loadJSONError)
+                }
+                else {
+                    loadJSON('sampleQuestion.json', present, loadJSONError)
+                }
+            }
+            
+            function present(data) {
+                const itemCount = data.questestinterop.assessment.section.item.length
+                logThis ('got data with '+ itemCount + ' items')
+                input = data
+                for (var i=0; i<itemCount; i++) {
+                    createHTMLElements(i)
+                    presentQuestion(i)
+                    presentAnswers(i)
+                }
+            }
+            
+            // respondToWhat() is called by button click event
+            function respondToWhat(userSaid,i) {
+
+            }
+            
+            
+            
+            
+            // createHTMLElements expects a parent div called "quiz"
+            /*<quiz>
+               <itemDiv>
+                   <qDiv></div>
+                   <aDiv>
+                       <a1Div></div>...
+                   </div>
+                   <rDiv></div>
+               </div>
+              </div>
+            */
+            function createHTMLElements(itemIndex) {
+               logThis ('entered createHTMLElements()')
+                
+               var iDiv = document.createElement('div')
+               iDiv.setAttribute('id','item_' + itemIndex)
+               
+               var qDiv = document.createElement('div')
+               qDiv.setAttribute('id','question_' + itemIndex)
+               qDiv.setAttribute('class','questionText')
+               iDiv.appendChild(qDiv)
+                
+               var aDiv = document.createElement('div')
+               aDiv.setAttribute('id','answers_' + itemIndex)
+               var numAnswers = input.questestinterop.assessment.section.item[itemIndex].presentation.response_lid.render_choice.response_label.length
+               for (j=0; j<numAnswers; j++) {
+                  //create answerdiv
+                  var answerDiv = document.createElement('div')
+                  answerDiv.setAttribute('id','answer_' + itemIndex + '_' + j)
+                  answerDiv.setAttribute('class','horizontal answerText')
+                  aDiv.appendChild(answerDiv)
+                };
+                iDiv.appendChild(aDiv)
+                
+                var cDiv = document.createElement('div')
+                cDiv.setAttribute('class','clearleft')
+                iDiv.appendChild(cDiv)
+                
+                
+                var fDiv = document.createElement('div')
+                fDiv.setAttribute('id','feedback_' + itemIndex)
+                fDiv.setAttribute('class','feedbackText')
+                iDiv.appendChild(fDiv)
+               
+                document.getElementById('quiz').appendChild(iDiv)                
+            }
+            
+            
+            
+            
+            function presentQuestion(itemIndex) {
+                logThis ('entered presentQuestion()')
+                document.getElementById('question_' + itemIndex).innerHTML =         input.questestinterop.assessment.section.item[itemIndex].presentation.material.mattext['#text']
+            }
+            
+            
+            
+            
+            function presentAnswers(itemIndex) {
+                logThis ('entered presentAnswers()')
+                const i = input.questestinterop.assessment.section.item[itemIndex]
+                var numAnswers = i.presentation.response_lid.render_choice.response_label.length
+                for (answerIndex=0; answerIndex<numAnswers; answerIndex++) {
+                    var t = '<button type="button">' + answerIndex + '</button> ' + answerIndex
+                    const response_label = i.presentation.response_lid.render_choice.response_label[answerIndex]
+                    document.getElementById('answer_' + itemIndex + '_' + answerIndex).innerHTML = t
+                    
+                    //response_label['-ident']
+                    //response_label.material.mattext['#text']
+                    //response_label.material.mattext['texttype']
+                    makeButton(itemIndex, answerIndex, response_label)
+                } 
+            }
+            
+            function makeButton (item, answer, response_label) {
+                const onclick = '\"respondToWhat(\'' + response_label['-ident'] +'\',' + item + ')\"'
+                console.log ('\"respondToWhat(\'' + response_label['-ident'] +'\',' + item + ')\"')
+                const letters = 'ABCDEFG'
+                const aText = response_label.material.mattext['#text']
+                const aIdent = response_label['-ident']
+                var buttonHTML = '<button type=\'button\' onclick=' +onclick + '>' + letters[answer] + '</button>' + aText
+                document.getElementById('answer_' + item + '_' + answer).innerHTML = buttonHTML
+            }
+            
+            
+            function respondToWhat(userSaid, itemIndex) {
+                logThis ('entered respondToWhat('+ userSaid + ',' + itemIndex+')')
+            }
+            
+            
+            
+            
+            function handleCondition(conditionIndex, userSaid, itemIndex) {
+                logThis ('handleCondition()')
+            }
+            
+            
+            
+            
+            
+            function logThis (t) {
+                console.log ('log',t)
+                const l = document.getElementById('console').innerHTML
+                document.getElementById('console').innerHTML = l + '<br \>' + t
+            }
+            
+            
+            
+            
+            
+            
+            function getUrlVars() {
+                var vars = {};
+                //window.location.href returns URL
+                var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                    vars[key] = value;
+                    }
+                );
+                if (Object.keys(vars).length == 0) {
+                    logThis ('NO URL PARAMETERS')
+                }
+                console.log('vars in getUrlVars:', vars)
+                return (vars);
+            }
+
+            
+            
+            
+            
+            function loadJSONError(){
+                document.getElementById('quiz').innerHTML = '<h3> Failed to load JSON for question</h3>'
+            }
+
+            
+            
+            
+            
+            /*
+            function present(data) {
+                
+                const x = data.questestinterop.assessment.section.item
+                for (var i=0; i<x.length; i++) {
+                    //create HTML elements
+                    itemDiv = document.createElement('div')
+                    itemDiv.setAttribute('id','quizitem' + i)
+                    qDiv = document.createElement('div')
+                    qDiv.setAttribute('class','trialstyle')
+                    qDiv.setAttribute('id','questionDisplayDiv' + i)
+                    itemDiv.appendChild(qDiv)
+                    numAnswers = x[i].presentation.response_lid.render_choice.response_label.length
+                    for (j=0; j<numAnswers; j++) {
+                        //create answerdiv
+                        aDiv = document.createElement('div')
+                        aDiv.setAttribute('id','answer_' + i + '_' + j)
+                        aDiv.setAttribute('class','horizontal')
+                        itemDiv.appendChild(aDiv)
+                    };
+                    var cDiv = document.createElement('div')
+                    cDiv.setAttribute('class','clearleft')
+                    itemDiv.appendChild(cDiv)
+                    document.getElementById('quiz').appendChild(itemDiv)
+                 
+               
+               //need to make response processing etc. multidimensional 
+                
+                console.log('function present(data): ', x)
+                const q = x[i].presentation.material.mattext['#text']
+                const a = x[i].presentation.response_lid.render_choice.response_label
+                console.log('itemfeedback: ',x[i].itemfeedback)
+                feedback[i] = x[i].itemfeedback
+                responseprocessing = x[i].resprocessing
+                displayQuestion(q, i)
+                displayAnswers(a, i)
+                }
+            }
+            
+            function respond(userSaid, questionNumber) {
+                console.log(userSaid)
+                //console.log(feedback[1])
+                var fbText = ''
+                const outcomes = responseprocessing.outcomes
+                const conditions = responseprocessing.respcondition
+                
+                const fb_obj = loadFBObj(questionNumber)
+                console.log('in function respond, fb_obj = ', fb_obj)
+                console.log('in function respond, conditions = ', conditions)
+                //console.log('OUR FEEDBACK IS: ', fb_obj[userSaid+'_fb'])
+                
+                console.log('entering for loop with conditions.length =', conditions.length)
+                for (var i = 0; i<conditions.length; i++) {
+                    var newFB = ''
+                    if (Object.getOwnPropertyNames(conditions[i].conditionvar).length === 0)
+                      {//console.log('conditionvar empty')
+                       //console.log('conditionvar length 0: ', fb_obj[conditions[i].displayfeedback.linkrefid].text)
+                       newFB = fb_obj[conditions[i].displayfeedback['-linkrefid']]['#text']
+                       if (fb_obj[conditions[i].displayfeedback['-linkrefid']]['-texttype'] !== 'text/html')
+                           {newFB = '<p>' + newFB + '</p>'}
+                       fbText = fbText + newFB
+                      }
+                    else 
+                      {
+                        console.log('conditionvar['+i+'] is', conditions[i].conditionvar)
+                        if (conditions[i].conditionvar.varequal['#text'] == userSaid){
+                            console.log(fb_obj[conditions[i].displayfeedback['-linkrefid']])
+                            //Is there a SCORE action on this condition?
+                            if (conditions[i].hasOwnProperty('setvar')) {
+                                if (conditions[i].setvar['-action'] == 'Set'){
+                                   document.getElementById(conditions[i].setvar['-varname']).innerHTML = conditions[i].setvar['#text']
+                                }
+                            }
+                            newFB = fb_obj[conditions[i].displayfeedback['-linkrefid']]['#text']
+                            if (fb_obj[conditions[i].displayfeedback['-linkrefid']]['-texttype'] !== 'text/html')
+                               {newFB = '<p>' + newFB + '</p>'}
+                            fbText = fbText + newFB 
+                            if (conditions[i]['-continue'] == 'No') {break;}
+                           }
+                        
+                        
+                    }
+                    
+                }
+                console.log('fbText is ', fbText)
+                document.getElementById('feedback').innerHTML = fbText
+                // DEAL WITH OUTCOMES
+                
+                //loop over responseprocessing
+                
+                // if conditions[i].conditionvar is empty then display fb_obj[conditions[i].displayfeedback.linkrefid]
+                
+                // if conditions[i].conditionvar not empty...
+                //    if there is a varequal then if conditions[i].conditionvar.varequal.text == userSaid
+                //       then display fb_obj[conditions[i].displayfeedback.linkrefid]
+                
+                //in each case we deal with score if answer is correct
+            }
+            
+            //AUXILLIARY FUNCTIONS
+            
+            function loadFBObj(questionNumber) {
+             var numberOfFeedbacks = feedback[questionNumber].length
+             var obj = {}
+             for (var i=0; i<numberOfFeedbacks; i++) {
+                 const a = feedback[questionNumber][i]['-ident']
+                 // MAYBE b should be mattext so it carries both text and texttype back
+                 const b = feedback[questionNumber][i].flow_mat.material.mattext //.text
+                 obj[a] = b
+                 }
+             return(obj)
+         }           
+
+            
+            
+            
+            
+            function getUrlVars() {
+                var vars = {};
+                //window.location.href returns URL
+                var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                    vars[key] = value;
+                    }
+                );
+                if (Object.keys(vars).length == 0) {
+                    console.log('NO URL PARAMETERS')
+                }
+                console.log('vars in getUrlVars:', vars)
+                return (vars);
+            }
+            
+            
+            function displayQuestion(qText, i) {
+                console.log('displayQuestion: q = ', qText)
+                document.getElementById('questionDisplayDiv' + i).innerHTML = qText
+            }
+            
+            function displayAnswers(aArray, whichQ) {
+                console.log('displayAnswers: a = ', aArray)
+                var numberOfAnswers = aArray.length
+                for (var whichA=0; whichA<numberOfAnswers; whichA++) {
+                    document.getElementById('answer_' + whichQ + '_' + whichA).innerHTML = makeButton(whichQ,whichA,aArray[whichA]['-ident'], aArray[whichA].material.mattext['#text'])
+                }
+            }
+            
+            function makeButton(q,a, ident, text) {
+                return ('<button type=\'button\' onclick="respond('+'\''+ident+'\','+ q +')">' +'abcdefghi'[a]+'</button>'+text)
+            }
+            
+            function userSaid(responseIdentifier) {
+                console.log('responseIdentifier =', responseIdentifier)
+                console.log('feedback[1] =', feedback[1])
+                
+            }*/
+
+        </script>
+    </head>
+    <body>
+        <h1>THIS IS VERSION 5.0</h1>
+        <p>Starting Over.  STOPPED at respond to what User Said. Need to add processing of conditions</p>
+        <h3>CONSOLE</h3>
+        <p id="console" class="log"></p>
+        <hr>
+        <table><tr><td>SCORE</td><td id="SCORE"></td></tr></table>
+        <hr>
+        <div id="quiz"></div>
+        <hr>
+        
+
+    </body>
+</html>
