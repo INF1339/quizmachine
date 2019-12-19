@@ -157,7 +157,16 @@
                 // so we "setvar" and/or "displayfeedback"
                 if (respcondition.hasOwnProperty('setvar')) {
                     logThis('SETVAR')
-                    }
+                    //"setvar": {
+                    //"-action": "Set",
+                    //"-varname": "SCORE",
+                    //"#text": "100"
+                    if (respcondition.setvar['-action'] == "Set") {
+                        var currentScore = +document.getElementById(respcondition.setvar['-varname']).innerHTML
+                        var points = +respcondition.setvar['#text']
+                        currentScore = currentScore + points
+                        document.getElementById(respcondition.setvar['-varname']).innerHTML = currentScore
+                    }}
                 if (respcondition.hasOwnProperty('displayfeedback')) {
                     logThis('DISPLAYFEEDBACK')
                     var x = respcondition.displayfeedback['-linkrefid']
@@ -194,6 +203,7 @@
             // TO BE SPECIFIED WHEN SCORING IS ADDED
             function processOutcome(outcomes, response1) {
                 logThis ('processOutcome called with (outcomes, response1)', outcomes, response1)
+
             }
             
             
@@ -244,7 +254,7 @@
     </head>
     <body>
         <h1>THIS IS VERSION 5.1</h1>
-        <p>Reads questions, answers, feedback from JSON derived without modification from Canvas quiz export XML. Gives feedback depending on answer chosen. Does not yet compile outcome scores. Formatting is still for development.
+        <p>Reads questions, answers, feedback from JSON. Gives feedback depending on answer chosen. Does not yet compile outcome scores. Formatting is still for development.
         </p>
         <h4>Next</h4>
         <p>User selects which questions to see? Or random one at a time? Layout experiments?  Test with more questions, test with more elaborate feedback HTML. Move question level feedback next to or below question (requires slight change to createHTMLElements() and overall layout specfication).</p>
