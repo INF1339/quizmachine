@@ -1,0 +1,558 @@
+{
+  "questestinterop": {
+    "xmlns": "http://www.imsglobal.org/xsd/ims_qtiasiv1p2",
+    "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+    "xsi:schemaLocation": "http://www.imsglobal.org/xsd/ims_qtiasiv1p2 http://www.imsglobal.org/xsd/ims_qtiasiv1p2p1.xsd",
+    "assessment": {
+      "-ident": "geec09e63fae9f27e331250de2bcbb036",
+      "-title": "Experimental Quiz",
+      "qtimetadata": {
+        "qtimetadatafield": {
+          "fieldlabel": "cc_maxattempts",
+          "fieldentry": "1"
+        }
+      },
+      "section": {
+        "-ident": "root_section",
+        "item": [
+          {
+            "-ident": "g135c5f9f86f22af56fda510555fb8418",
+            "-title": "ILOVETRASH",
+            "itemmetadata": {
+              "qtimetadata": {
+                "qtimetadatafield": [
+                  {
+                    "fieldlabel": "question_type",
+                    "fieldentry": "multiple_choice_question"
+                  },
+                  {
+                    "fieldlabel": "points_possible",
+                    "fieldentry": "1.0"
+                  },
+                  {
+                    "fieldlabel": "original_answer_ids",
+                    "fieldentry": "4810,7500,1441,3260"
+                  },
+                  {
+                    "fieldlabel": "assessment_question_identifierref",
+                    "fieldentry": "g9bdd518458eacbc4bf95e6d1fad2a60b"
+                  }
+                ]
+              }
+            },
+            "presentation": {
+              "material": {
+                "mattext": {
+                  "-texttype": "text/html",
+                  "#text": "<div><p>What is the name of the character who sings I love trash?</p><p><iframe src=\"//www.youtube.com/embed/mUXojQ_nhD4\" width=\"280\" height=\"157\" allowfullscreen=\"allowfullscreen\"></iframe></p></div>"
+                }
+              },
+              "response_lid": {
+                "-ident": "response1",
+                "-rcardinality": "Single",
+                "render_choice": {
+                  "response_label": [
+                    {
+                      "-ident": "4810",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/plain",
+                          "#text": "Oscar"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "7500",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/plain",
+                          "#text": "Grover"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "1441",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/plain",
+                          "#text": "Big Bird"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "3260",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/plain",
+                          "#text": "Buffy"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "resprocessing": {
+              "outcomes": {
+                "decvar": {
+                  "-maxvalue": "100",
+                  "-minvalue": "0",
+                  "-varname": "SCORE",
+                  "-vartype": "Decimal"
+                }
+              },
+              "respcondition": [
+                {
+                  "-continue": "Yes",
+                  "conditionvar": {
+                    
+                  },
+                  "displayfeedback": {
+                    "-feedbacktype": "Response",
+                    "-linkrefid": "general_fb"
+                  }
+                },
+                {
+                  "-continue": "Yes",
+                  "conditionvar": {
+                    "varequal": {
+                      "-respident": "response1",
+                      "#text": "4810"
+                    }
+                  },
+                  "displayfeedback": {
+                    "-feedbacktype": "Response",
+                    "-linkrefid": "4810_fb"
+                  }
+                },
+                {
+                  "-continue": "Yes",
+                  "conditionvar": {
+                    "varequal": {
+                      "-respident": "response1",
+                      "#text": "7500"
+                    }
+                  },
+                  "displayfeedback": {
+                    "-feedbacktype": "Response",
+                    "-linkrefid": "7500_fb"
+                  }
+                },
+                {
+                  "-continue": "Yes",
+                  "conditionvar": {
+                    "varequal": {
+                      "-respident": "response1",
+                      "#text": "1441"
+                    }
+                  },
+                  "displayfeedback": {
+                    "-feedbacktype": "Response",
+                    "-linkrefid": "1441_fb"
+                  }
+                },
+                {
+                  "-continue": "Yes",
+                  "conditionvar": {
+                    "varequal": {
+                      "-respident": "response1",
+                      "#text": "3260"
+                    }
+                  },
+                  "displayfeedback": {
+                    "-feedbacktype": "Response",
+                    "-linkrefid": "3260_fb"
+                  }
+                },
+                {
+                  "-continue": "No",
+                  "conditionvar": {
+                    "varequal": {
+                      "-respident": "response1",
+                      "#text": "4810"
+                    }
+                  },
+                  "setvar": {
+                    "-action": "Set",
+                    "-varname": "SCORE",
+                    "#text": "100"
+                  },
+                  "displayfeedback": {
+                    "-feedbacktype": "Response",
+                    "-linkrefid": "correct_fb"
+                  }
+                },
+                {
+                  "-continue": "Yes",
+                  "conditionvar": {
+                    
+                  },
+                  "displayfeedback": {
+                    "-feedbacktype": "Response",
+                    "-linkrefid": "general_incorrect_fb"
+                  }
+                }
+              ]
+            },
+            "itemfeedback": [
+              {
+                "-ident": "general_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>Maybe more television?</p>"
+                    }
+                  }
+                }
+              },
+              {
+                "-ident": "correct_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>GOOD!</p>"
+                    }
+                  }
+                }
+              },
+              {
+                "-ident": "general_incorrect_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>BAD!</p>"
+                    }
+                  }
+                }
+              },
+              {
+                "-ident": "4810_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>Yes indeed it was Oscar!</p>"
+                    }
+                  }
+                }
+              },
+              {
+                "-ident": "7500_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>Why would you say Grover?</p>"
+                    }
+                  }
+                }
+              },
+              {
+                "-ident": "1441_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>It might be true of BB, but they did not sing it here.</p>"
+                    }
+                  }
+                }
+              },
+              {
+                "-ident": "3260_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>Wrong show maybe?</p>"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "-ident": "gb290128c05c9cbcf3ac8b366b2162732",
+            "-title": "BigO Notation Simple",
+            "itemmetadata": {
+              "qtimetadata": {
+                "qtimetadatafield": [
+                  {
+                    "fieldlabel": "question_type",
+                    "fieldentry": "multiple_choice_question"
+                  },
+                  {
+                    "fieldlabel": "points_possible",
+                    "fieldentry": "1.0"
+                  },
+                  {
+                    "fieldlabel": "original_answer_ids",
+                    "fieldentry": "6747,5080,1818,3739,8248"
+                  },
+                  {
+                    "fieldlabel": "assessment_question_identifierref",
+                    "fieldentry": "g3b5efdf536d03397b242d1bb7548e5be"
+                  }
+                ]
+              }
+            },
+            "presentation": {
+              "material": {
+                "mattext": {
+                  "-texttype": "text/html",
+                  "#text": "<div><p>Which of the following shows computational complexity going from best (scales nicely) to worst (large inputs make the task impossible - the algorithm does not scale well)?</p></div>"
+                }
+              },
+              "response_lid": {
+                "-ident": "response1",
+                "-rcardinality": "Single",
+                "render_choice": {
+                  "response_label": [
+                    {
+                      "-ident": "6747",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "1 , log n, n, n log<sub>n</sub>, n<sup>2</sup>, 2<sup>n</sup>"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "5080",
+                      "material": {
+                        "mattext": { "-texttype": "text/plain" ,"#text": "HUH?"}
+                      }
+                    },
+                    {
+                      "-ident": "1818",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "2<sup>n</sup>, n2, n log n, n, log n, 1"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "3739",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "n, 2<sup>n</sup>, log n, n log n, n, 1"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "8248",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "log n, n log n, n<sup>2</sup>, 2<sup>n</sup>, n, 1"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "resprocessing": {
+              "outcomes": {
+                "decvar": {
+                  "-maxvalue": "100",
+                  "-minvalue": "0",
+                  "-varname": "SCORE",
+                  "-vartype": "Decimal"
+                }
+              },
+              "respcondition": [
+                {
+                  "-continue": "Yes",
+                  "conditionvar": {
+                    
+                  },
+                  "displayfeedback": {
+                    "-feedbacktype": "Response",
+                    "-linkrefid": "general_fb"
+                  }
+                },
+                {
+                  "-continue": "No",
+                  "conditionvar": {
+                    "varequal": {
+                      "-respident": "response1",
+                      "#text": "6747"
+                    }
+                  },
+                  "setvar": {
+                    "-action": "Set",
+                    "-varname": "SCORE",
+                    "#text": "100"
+                  }
+                }
+              ]
+            },
+            "itemfeedback": {
+              "-ident": "general_fb",
+              "flow_mat": {
+                "material": {
+                  "mattext": {
+                    "-texttype": "text/html",
+                    "#text": "<p>See Filho pp 27-31</p>"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "-ident": "g6d738a1c26516a03b66cbab6f5ee6e78",
+            "-title": "Circuit",
+            "itemmetadata": {
+              "qtimetadata": {
+                "qtimetadatafield": [
+                  {
+                    "fieldlabel": "question_type",
+                    "fieldentry": "multiple_choice_question"
+                  },
+                  {
+                    "fieldlabel": "points_possible",
+                    "fieldentry": "1.0"
+                  },
+                  {
+                    "fieldlabel": "original_answer_ids",
+                    "fieldentry": "9907,2673,1157,7510,3247"
+                  },
+                  {
+                    "fieldlabel": "assessment_question_identifierref",
+                    "fieldentry": "gc543fde87c267d7a4eda131997c6a859"
+                  }
+                ]
+              }
+            },
+            "presentation": {
+              "material": {
+                "mattext": {
+                  "-texttype": "text/html",
+                  "#text": "<div><p>Which circuit below implements the functi?on <span style=\"font-size: 14pt;\"><strong>~PQ or ~P~R</strong><span style=\"font-size: 12pt;\">?</span></span></p></div>"
+                }
+              },
+              "response_lid": {
+                "-ident": "response1",
+                "-rcardinality": "Single",
+                "render_choice": {
+                  "response_label": [
+                    {
+                      "-ident": "9907",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "<p><img src=\"https://docs.google.com/drawings/d/e/2PACX-1vRGke26M7pu-gecVcXp-NEBHDWPl4ps2wdyLU4cP_YwE7K9tT2goBXIW2aCSC37fLNojUqfxt-FTh_U/pub?w=782&amp;h=199\"></p>"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "2673",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "<p><img src=\"https://docs.google.com/drawings/d/e/2PACX-1vQyq57nrIZ2NqS7JkCS7ZVFHW8KbEs_wxZsJWFav4TTS3XFHmbi5e_R54TVXKTO6wJYiDiJDSSVtjgt/pub?w=804&amp;h=203\"></p>"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "1157",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "<p><img src=\"https://docs.google.com/drawings/d/e/2PACX-1vTgu_r7jMNrgW5qFh-9io3PIGuH_ZtatSbIKxk4LO2govuoHpztH1ZWuiLysqzHML7iU1xi5O8D5Iws/pub?w=789&amp;h=224\"></p>"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "7510",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "<p><img src=\"https://docs.google.com/drawings/d/e/2PACX-1vRBQAhY1FVXm1fKZn2XeXk8fGDWI5kmQBsSYpo_ZIdKlPlhSHyVhmnxykXmbKKStTfM5VqoyFXNg1gY/pub?w=776&amp;h=168\" width=\"774\" height=\"168\"></p>"
+                        }
+                      }
+                    },
+                    {
+                      "-ident": "3247",
+                      "material": {
+                        "mattext": {
+                          "-texttype": "text/html",
+                          "#text": "<p><img src=\"https://docs.google.com/drawings/d/e/2PACX-1vTLGtji8Sr70IdqCFwIj0XuKUcAt15P9IyziHfMiJg_eb0TiR-bNClp6xVEYcF-rxph1d0DSkMMaxyt/pub?w=864&amp;h=159\"></p>"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "resprocessing": {
+              "outcomes": {
+                "decvar": {
+                  "-maxvalue": "100",
+                  "-minvalue": "0",
+                  "-varname": "SCORE",
+                  "-vartype": "Decimal"
+                }
+              },
+              "respcondition": [
+                  {"-continue": "Yes",
+                "conditionvar": {},
+                   "displayfeedback": {"-feedbacktype": "Response", "-linkrefid": "general_fb"}
+                  },
+                  {
+                "-continue": "No",
+                "conditionvar": {
+                  "varequal": {
+                    "-respident": "response1",
+                    "#text": "9907"
+                  }
+                },
+                "setvar": {
+                  "-action": "Set",
+                  "-varname": "SCORE",
+                  "#text": "100"
+                },
+                  "displayfeedback": {"-feedbacktype": "Response1", "-linkrefid": "correct_fb"}
+              }]
+            }
+              
+            ,
+            "itemfeedback": [
+              {
+                "-ident": "general_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>Circuits are so important!</p>"
+                    }
+                  }
+                }
+              },
+              {
+                "-ident": "correct_fb",
+                "flow_mat": {
+                  "material": {
+                    "mattext": {
+                      "-texttype": "text/html",
+                      "#text": "<p>You sure seem to know your logic circuits!</p>"
+                    }
+                  }
+                }
+              }]  
+              
+              
+              
+              
+          }
+        ]
+      }
+    }
+  }
+}
